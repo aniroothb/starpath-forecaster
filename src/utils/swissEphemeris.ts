@@ -42,7 +42,7 @@ const calculatePlanetPosition = (julianDay: number, planet: number): PlanetPosit
       longitude: result.longitude,
       latitude: result.latitude,
       distance: result.distance,
-      speed: result.longitudeSpeed // Changed from speedLong to longitudeSpeed
+      speed: result.longitudeSpeed
     };
   }
   

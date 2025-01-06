@@ -28,6 +28,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    include: ['swisseph']
+    include: ['swisseph'],
+    esbuildOptions: {
+      target: 'esnext'
+    }
   }
 }));

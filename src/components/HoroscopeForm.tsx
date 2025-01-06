@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const HoroscopeForm = () => {
   const [formData, setFormData] = useState({
@@ -63,42 +69,73 @@ const HoroscopeForm = () => {
             <div className="grid grid-cols-3 gap-2">
               <Select
                 value={formData.birthDate.day}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  birthDate: { ...formData.birthDate, day: e.target.value }
-                })}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    birthDate: { ...formData.birthDate, day: value }
+                  })
+                }
               >
-                {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                  <option key={day} value={String(day).padStart(2, '0')}>
-                    {String(day).padStart(2, '0')}
-                  </option>
-                ))}
+                <SelectTrigger>
+                  <SelectValue placeholder="วัน" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                    <SelectItem
+                      key={day}
+                      value={String(day).padStart(2, "0")}
+                    >
+                      {String(day).padStart(2, "0")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
+
               <Select
                 value={formData.birthDate.month}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  birthDate: { ...formData.birthDate, month: e.target.value }
-                })}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    birthDate: { ...formData.birthDate, month: value }
+                  })
+                }
               >
-                {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                  <option key={month} value={String(month).padStart(2, '0')}>
-                    {new Date(2024, month - 1).toLocaleString('th-TH', { month: 'long' })}
-                  </option>
-                ))}
+                <SelectTrigger>
+                  <SelectValue placeholder="เดือน" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                    <SelectItem
+                      key={month}
+                      value={String(month).padStart(2, "0")}
+                    >
+                      {new Date(2024, month - 1).toLocaleString("th-TH", {
+                        month: "long"
+                      })}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
+
               <Select
                 value={formData.birthDate.year}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  birthDate: { ...formData.birthDate, year: e.target.value }
-                })}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    birthDate: { ...formData.birthDate, year: value }
+                  })
+                }
               >
-                {Array.from({ length: 100 }, (_, i) => 2024 - i).map(year => (
-                  <option key={year} value={String(year)}>
-                    {year + 543}
-                  </option>
-                ))}
+                <SelectTrigger>
+                  <SelectValue placeholder="ปี" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 100 }, (_, i) => 2024 - i).map((year) => (
+                    <SelectItem key={year} value={String(year)}>
+                      {year + 543}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
           </div>
@@ -111,29 +148,50 @@ const HoroscopeForm = () => {
             <div className="grid grid-cols-2 gap-2">
               <Select
                 value={formData.birthDate.hour}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  birthDate: { ...formData.birthDate, hour: e.target.value }
-                })}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    birthDate: { ...formData.birthDate, hour: value }
+                  })
+                }
               >
-                {Array.from({ length: 24 }, (_, i) => i).map(hour => (
-                  <option key={hour} value={String(hour).padStart(2, '0')}>
-                    {String(hour).padStart(2, '0')}
-                  </option>
-                ))}
+                <SelectTrigger>
+                  <SelectValue placeholder="ชั่วโมง" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                    <SelectItem
+                      key={hour}
+                      value={String(hour).padStart(2, "0")}
+                    >
+                      {String(hour).padStart(2, "0")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
+
               <Select
                 value={formData.birthDate.minute}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  birthDate: { ...formData.birthDate, minute: e.target.value }
-                })}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    birthDate: { ...formData.birthDate, minute: value }
+                  })
+                }
               >
-                {Array.from({ length: 60 }, (_, i) => i).map(minute => (
-                  <option key={minute} value={String(minute).padStart(2, '0')}>
-                    {String(minute).padStart(2, '0')}
-                  </option>
-                ))}
+                <SelectTrigger>
+                  <SelectValue placeholder="นาที" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
+                    <SelectItem
+                      key={minute}
+                      value={String(minute).padStart(2, "0")}
+                    >
+                      {String(minute).padStart(2, "0")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
           </div>
@@ -145,11 +203,38 @@ const HoroscopeForm = () => {
             สถานที่เกิด
           </Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <Select>
-              <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
+            <Select
+              value={formData.location.city}
+              onValueChange={(value) =>
+                setFormData({
+                  ...formData,
+                  location: { ...formData.location, city: value }
+                })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="จังหวัด" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="กรุงเทพมหานคร">กรุงเทพมหานคร</SelectItem>
+              </SelectContent>
             </Select>
-            <Select>
-              <option value="เขตพระนคร">เขตพระนคร</option>
+
+            <Select
+              value={formData.location.district}
+              onValueChange={(value) =>
+                setFormData({
+                  ...formData,
+                  location: { ...formData.location, district: value }
+                })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="เขต" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="เขตพระนคร">เขตพระนคร</SelectItem>
+              </SelectContent>
             </Select>
           </div>
           <div className="grid grid-cols-2 gap-2 mt-2">

@@ -37,11 +37,21 @@ const calculatePlanetPosition = (julianDay: number, planet: number): PlanetPosit
   const flag = swisseph.SEFLG_SPEED | swisseph.SEFLG_SWIEPH;
   const result = swisseph.swe_calc_ut(julianDay, planet, flag);
   
+  if ('longitude' in result) {
+    return {
+      longitude: result.longitude,
+      latitude: result.latitude,
+      distance: result.distance,
+      speed: result.longitudeSpeed // Changed from speedLong to longitudeSpeed
+    };
+  }
+  
+  // Fallback for cases where different coordinate system is returned
   return {
-    longitude: result.longitude,
-    latitude: result.latitude,
-    distance: result.distance,
-    speed: result.speedLong
+    longitude: 0,
+    latitude: 0,
+    distance: 0,
+    speed: 0
   };
 }
 
@@ -51,10 +61,10 @@ const calculateNodes = (julianDay: number): { rahu: PlanetPosition; ketu: Planet
   const result = swisseph.swe_calc_ut(julianDay, swisseph.SE_MEAN_NODE, flag);
   
   const rahu = {
-    longitude: result.longitude,
-    latitude: result.latitude,
-    distance: result.distance,
-    speed: result.speedLong
+    longitude: 'longitude' in result ? result.longitude : 0,
+    latitude: 'latitude' in result ? result.latitude : 0,
+    distance: 'distance' in result ? result.distance : 0,
+    speed: 'longitudeSpeed' in result ? result.longitudeSpeed : 0
   };
   
   // เกตุอยู่ตรงข้ามราหูเสมอ (180 องศา)

@@ -1,4 +1,4 @@
-import * as swisseph from 'swisseph';
+import swisseph from 'swisseph';
 
 // Initialize ephemeris data path (using bundled data)
 swisseph.swe_set_ephe_path(null);

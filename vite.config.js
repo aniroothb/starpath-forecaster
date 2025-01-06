@@ -21,7 +21,13 @@ export default defineConfig(({ mode }) => ({
   define: {
     __dirname: JSON.stringify(""),
   },
+  build: {
+    commonjsOptions: {
+      include: [/swisseph/, /node_modules/],
+      transformMixedEsModules: true,
+    },
+  },
   optimizeDeps: {
-    exclude: ['swisseph']
+    include: ['swisseph']
   }
 }));

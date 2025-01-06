@@ -19,10 +19,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  define: {
-    __dirname: JSON.stringify(""),
-  },
-  optimizeDeps: {
-    exclude: ['swisseph']
-  }
 }));

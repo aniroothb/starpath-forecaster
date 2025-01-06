@@ -5,6 +5,7 @@ import { Select } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
+import { calculateHoroscope } from "@/utils/horoscopeCalculations";
 
 const HoroscopeForm = () => {
   const [formData, setFormData] = useState({
@@ -25,10 +26,13 @@ const HoroscopeForm = () => {
     }
   });
 
+  const [result, setResult] = useState<string>("");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement horoscope calculation
-    console.log("Form submitted:", formData);
+    const horoscope = calculateHoroscope(formData);
+    setResult(horoscope.interpretation);
+    console.log("Horoscope calculation:", horoscope);
   };
 
   return (
@@ -57,14 +61,44 @@ const HoroscopeForm = () => {
               วันเดือนปีเกิด
             </Label>
             <div className="grid grid-cols-3 gap-2">
-              <Select>
-                <option value="06">06</option>
+              <Select
+                value={formData.birthDate.day}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  birthDate: { ...formData.birthDate, day: e.target.value }
+                })}
+              >
+                {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                  <option key={day} value={String(day).padStart(2, '0')}>
+                    {String(day).padStart(2, '0')}
+                  </option>
+                ))}
               </Select>
-              <Select>
-                <option value="01">มกราคม</option>
+              <Select
+                value={formData.birthDate.month}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  birthDate: { ...formData.birthDate, month: e.target.value }
+                })}
+              >
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                  <option key={month} value={String(month).padStart(2, '0')}>
+                    {new Date(2024, month - 1).toLocaleString('th-TH', { month: 'long' })}
+                  </option>
+                ))}
               </Select>
-              <Select>
-                <option value="2005">2548</option>
+              <Select
+                value={formData.birthDate.year}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  birthDate: { ...formData.birthDate, year: e.target.value }
+                })}
+              >
+                {Array.from({ length: 100 }, (_, i) => 2024 - i).map(year => (
+                  <option key={year} value={String(year)}>
+                    {year + 543}
+                  </option>
+                ))}
               </Select>
             </div>
           </div>
@@ -75,11 +109,31 @@ const HoroscopeForm = () => {
               เวลา
             </Label>
             <div className="grid grid-cols-2 gap-2">
-              <Select>
-                <option value="10">10</option>
+              <Select
+                value={formData.birthDate.hour}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  birthDate: { ...formData.birthDate, hour: e.target.value }
+                })}
+              >
+                {Array.from({ length: 24 }, (_, i) => i).map(hour => (
+                  <option key={hour} value={String(hour).padStart(2, '0')}>
+                    {String(hour).padStart(2, '0')}
+                  </option>
+                ))}
               </Select>
-              <Select>
-                <option value="53">53</option>
+              <Select
+                value={formData.birthDate.minute}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  birthDate: { ...formData.birthDate, minute: e.target.value }
+                })}
+              >
+                {Array.from({ length: 60 }, (_, i) => i).map(minute => (
+                  <option key={minute} value={String(minute).padStart(2, '0')}>
+                    {String(minute).padStart(2, '0')}
+                  </option>
+                ))}
               </Select>
             </div>
           </div>
@@ -114,6 +168,13 @@ const HoroscopeForm = () => {
           </Button>
         </div>
       </form>
+
+      {result && (
+        <div className="mt-6 p-4 bg-primary/5 rounded-lg">
+          <h2 className="text-xl font-semibold mb-2">ผลการทำนาย</h2>
+          <p className="whitespace-pre-line">{result}</p>
+        </div>
+      )}
     </Card>
   );
 };

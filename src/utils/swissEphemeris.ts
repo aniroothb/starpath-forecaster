@@ -22,6 +22,19 @@ interface PlanetPositions {
   ketu: PlanetPosition;     // เกตุ
 }
 
+// Type definition for Swiss Ephemeris calculation result
+interface SwissEphResult {
+  longitude?: number;
+  latitude?: number;
+  distance?: number;
+  longitudeSpeed?: number;
+  rectAscension?: number;
+  declination?: number;
+  x?: number;
+  y?: number;
+  z?: number;
+}
+
 // แปลงวันที่เป็น Julian Day Number
 const getJulianDay = (date: Date): number => {
   const year = date.getFullYear();
@@ -35,36 +48,26 @@ const getJulianDay = (date: Date): number => {
 // คำนวณตำแหน่งดาวเคราะห์
 const calculatePlanetPosition = (julianDay: number, planet: number): PlanetPosition => {
   const flag = swisseph.SEFLG_SPEED | swisseph.SEFLG_SWIEPH;
-  const result = swisseph.swe_calc_ut(julianDay, planet, flag);
+  const result = swisseph.swe_calc_ut(julianDay, planet, flag) as SwissEphResult;
   
-  if ('longitude' in result) {
-    return {
-      longitude: result.longitude,
-      latitude: result.latitude,
-      distance: result.distance,
-      speed: result.longitudeSpeed
-    };
-  }
-  
-  // Fallback for cases where different coordinate system is returned
   return {
-    longitude: 0,
-    latitude: 0,
-    distance: 0,
-    speed: 0
+    longitude: result.longitude ?? 0,
+    latitude: result.latitude ?? 0,
+    distance: result.distance ?? 0,
+    speed: result.longitudeSpeed ?? 0
   };
 }
 
 // คำนวณตำแหน่งราหู/เกตุ
 const calculateNodes = (julianDay: number): { rahu: PlanetPosition; ketu: PlanetPosition } => {
   const flag = swisseph.SEFLG_SPEED | swisseph.SEFLG_SWIEPH;
-  const result = swisseph.swe_calc_ut(julianDay, swisseph.SE_MEAN_NODE, flag);
+  const result = swisseph.swe_calc_ut(julianDay, swisseph.SE_MEAN_NODE, flag) as SwissEphResult;
   
   const rahu = {
-    longitude: 'longitude' in result ? result.longitude : 0,
-    latitude: 'latitude' in result ? result.latitude : 0,
-    distance: 'distance' in result ? result.distance : 0,
-    speed: 'longitudeSpeed' in result ? result.longitudeSpeed : 0
+    longitude: result.longitude ?? 0,
+    latitude: result.latitude ?? 0,
+    distance: result.distance ?? 0,
+    speed: result.longitudeSpeed ?? 0
   };
   
   // เกตุอยู่ตรงข้ามราหูเสมอ (180 องศา)

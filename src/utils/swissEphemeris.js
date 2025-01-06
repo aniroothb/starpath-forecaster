@@ -3,40 +3,8 @@ import * as swisseph from 'swisseph';
 // Initialize ephemeris data path (using bundled data)
 swisseph.swe_set_ephe_path(null);
 
-interface PlanetPosition {
-  longitude: number;  // ตำแหน่งองศาในจักรราศี
-  latitude: number;   // ละติจูดดาว
-  distance: number;   // ระยะห่างจากโลก
-  speed: number;     // ความเร็วการเคลื่อนที่
-}
-
-interface PlanetPositions {
-  sun: PlanetPosition;      // พระอาทิตย์
-  moon: PlanetPosition;     // พระจันทร์
-  mars: PlanetPosition;     // อังคาร
-  mercury: PlanetPosition;  // พุธ
-  jupiter: PlanetPosition;  // พฤหัสบดี
-  venus: PlanetPosition;    // ศุกร์
-  saturn: PlanetPosition;   // เสาร์
-  rahu: PlanetPosition;     // ราหู
-  ketu: PlanetPosition;     // เกตุ
-}
-
-// Type definition for Swiss Ephemeris calculation result
-interface SwissEphResult {
-  longitude?: number;
-  latitude?: number;
-  distance?: number;
-  longitudeSpeed?: number;
-  rectAscension?: number;
-  declination?: number;
-  x?: number;
-  y?: number;
-  z?: number;
-}
-
 // แปลงวันที่เป็น Julian Day Number
-const getJulianDay = (date: Date): number => {
+const getJulianDay = (date) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
@@ -46,28 +14,28 @@ const getJulianDay = (date: Date): number => {
 }
 
 // คำนวณตำแหน่งดาวเคราะห์
-const calculatePlanetPosition = (julianDay: number, planet: number): PlanetPosition => {
+const calculatePlanetPosition = (julianDay, planet) => {
   const flag = swisseph.SEFLG_SPEED | swisseph.SEFLG_SWIEPH;
-  const result = swisseph.swe_calc_ut(julianDay, planet, flag) as SwissEphResult;
+  const result = swisseph.swe_calc_ut(julianDay, planet, flag);
   
   return {
-    longitude: result.longitude ?? 0,
-    latitude: result.latitude ?? 0,
-    distance: result.distance ?? 0,
-    speed: result.longitudeSpeed ?? 0
+    longitude: result.longitude || 0,
+    latitude: result.latitude || 0,
+    distance: result.distance || 0,
+    speed: result.longitudeSpeed || 0
   };
 }
 
 // คำนวณตำแหน่งราหู/เกตุ
-const calculateNodes = (julianDay: number): { rahu: PlanetPosition; ketu: PlanetPosition } => {
+const calculateNodes = (julianDay) => {
   const flag = swisseph.SEFLG_SPEED | swisseph.SEFLG_SWIEPH;
-  const result = swisseph.swe_calc_ut(julianDay, swisseph.SE_MEAN_NODE, flag) as SwissEphResult;
+  const result = swisseph.swe_calc_ut(julianDay, swisseph.SE_MEAN_NODE, flag);
   
   const rahu = {
-    longitude: result.longitude ?? 0,
-    latitude: result.latitude ?? 0,
-    distance: result.distance ?? 0,
-    speed: result.longitudeSpeed ?? 0
+    longitude: result.longitude || 0,
+    latitude: result.latitude || 0,
+    distance: result.distance || 0,
+    speed: result.longitudeSpeed || 0
   };
   
   // เกตุอยู่ตรงข้ามราหูเสมอ (180 องศา)
@@ -81,7 +49,7 @@ const calculateNodes = (julianDay: number): { rahu: PlanetPosition; ketu: Planet
   return { rahu, ketu };
 }
 
-export const calculateAllPlanetPositions = (birthDate: Date): PlanetPositions => {
+export const calculateAllPlanetPositions = (birthDate) => {
   const julianDay = getJulianDay(birthDate);
   const nodes = calculateNodes(julianDay);
   
@@ -99,7 +67,7 @@ export const calculateAllPlanetPositions = (birthDate: Date): PlanetPositions =>
 }
 
 // แปลงองศาเป็นราศี
-export const getLunarMansion = (longitude: number): string => {
+export const getLunarMansion = (longitude) => {
   const mansions = [
     "เมษ", "พฤษภ", "มิถุน", "กรกฎ", 
     "สิงห์", "กันย์", "ตุล", "พิจิก",

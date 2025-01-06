@@ -1,24 +1,6 @@
 import { calculateAllPlanetPositions, getLunarMansion } from './swissEphemeris';
 
-interface HoroscopeData {
-  name: string;
-  birthDate: {
-    day: string;
-    month: string;
-    year: string;
-    hour: string;
-    minute: string;
-  };
-  location: {
-    city: string;
-    district: string;
-    latitude: string;
-    longitude: string;
-    utc: string;
-  };
-}
-
-export const calculateHoroscope = (data: HoroscopeData) => {
+export const calculateHoroscope = (data) => {
   // แปลงข้อมูลวันเดือนปีเกิดเป็น Date object
   const birthDate = new Date(
     parseInt(data.birthDate.year),

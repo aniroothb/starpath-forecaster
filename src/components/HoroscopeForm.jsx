@@ -32,9 +32,9 @@ const HoroscopeForm = () => {
     }
   });
 
-  const [result, setResult] = useState<string>("");
+  const [result, setResult] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const horoscope = calculateHoroscope(formData);
     setResult(horoscope.interpretation);

@@ -9,18 +9,15 @@ export const generateHoroscopePrediction = async (
   try {
     const hf = new HfInference(apiKey);
     
-    const prompt = `คุณเป็นหมอดูที่เชี่ยวชาญด้านโหราศาสตร์ไทย กรุณาทำนายดวงชะตาสำหรับผู้ที่:
+    const prompt = `คำทำนายดวงชะตาสำหรับผู้ที่:
     - เกิดราศี: ${zodiacSign}
     - มฤตยู: ${lunarMansion}
     - ดาวประจำวัน: ${dailyPlanet}
     
-    ให้คำทำนายที่ครอบคลุมด้าน:
     1. การงาน
     2. การเงิน
     3. ความรัก
-    4. สุขภาพ
-    
-    ตอบความยาวประมาณ 3-4 ย่อหน้า`;
+    4. สุขภาพ`;
 
     const response = await hf.textGeneration({
       model: 'mistralai/Mistral-7B-Instruct-v0.2',
@@ -33,7 +30,13 @@ export const generateHoroscopePrediction = async (
       }
     });
 
-    return response.generated_text;
+    // Remove the instructions from the response if they appear
+    let cleanedText = response.generated_text
+      .replace(/คุณเป็นหมอดูที่เชี่ยวชาญ.*?\n/g, '')
+      .replace(/ตอบความยาวประมาณ.*?\n/g, '')
+      .trim();
+
+    return cleanedText;
   } catch (error) {
     console.error('Error generating prediction:', error);
     return 'ขออภัย ไม่สามารถสร้างคำทำนายได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง';

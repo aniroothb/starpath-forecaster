@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
+import { generateHoroscopePrediction } from "@/utils/perplexityApi";
 import {
   Select,
   SelectContent,
@@ -32,13 +33,34 @@ const HoroscopeForm = () => {
     }
   });
 
+  const [apiKey, setApiKey] = useState("");
   const [result, setResult] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const horoscope = calculateHoroscope(formData);
-    setResult(horoscope.interpretation);
-    console.log("Horoscope calculation:", horoscope);
+    setIsLoading(true);
+    
+    try {
+      const horoscope = calculateHoroscope(formData);
+      
+      if (apiKey) {
+        const aiPrediction = await generateHoroscopePrediction(
+          apiKey,
+          horoscope.zodiacSign,
+          horoscope.lunarMansion,
+          horoscope.dailyPlanet
+        );
+        setResult(aiPrediction);
+      } else {
+        setResult(horoscope.interpretation);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setResult("เกิดข้อผิดพลาดในการทำนาย กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -58,6 +80,21 @@ const HoroscopeForm = () => {
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="celestial-input"
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="apiKey">Perplexity API Key (ถ้าต้องการคำทำนายจาก AI)</Label>
+          <Input
+            id="apiKey"
+            type="password"
+            placeholder="ใส่ API Key เพื่อใช้งาน AI"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            className="celestial-input"
+          />
+          <p className="text-sm text-muted-foreground">
+            หากไม่ได้ใส่ API Key ระบบจะใช้การคำนวณแบบพื้นฐาน
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -248,8 +285,12 @@ const HoroscopeForm = () => {
         </div>
 
         <div className="pt-4">
-          <Button type="submit" className="w-full celestial-button">
-            ทำนาย
+          <Button 
+            type="submit" 
+            className="w-full celestial-button"
+            disabled={isLoading}
+          >
+            {isLoading ? "กำลังทำนาย..." : "ทำนาย"}
           </Button>
         </div>
       </form>

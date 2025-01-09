@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
-import { generateHoroscopePrediction } from "@/utils/perplexityApi";
+import { generateHoroscopePrediction } from "@/utils/huggingfaceApi";
 import {
   Select,
   SelectContent,
@@ -83,7 +83,7 @@ const HoroscopeForm = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="apiKey">Perplexity API Key (ถ้าต้องการคำทำนายจาก AI)</Label>
+          <Label htmlFor="apiKey">Hugging Face API Key (ถ้าต้องการคำทำนายจาก AI)</Label>
           <Input
             id="apiKey"
             type="password"

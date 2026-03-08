@@ -55,18 +55,7 @@ const HoroscopeForm = () => {
     
     try {
       const horoscope = calculateHoroscope(formData);
-      
-      if (apiKey) {
-        const aiPrediction = await generateHoroscopePrediction(
-          apiKey,
-          horoscope.zodiacSign,
-          horoscope.lunarMansion,
-          horoscope.dailyPlanet
-        );
-        setResult(aiPrediction);
-      } else {
-        setResult(horoscope.interpretation);
-      }
+      setResult(horoscope.interpretation);
     } catch (error) {
       console.error('Error:', error);
       setResult("เกิดข้อผิดพลาดในการทำนาย กรุณาลองใหม่อีกครั้ง");

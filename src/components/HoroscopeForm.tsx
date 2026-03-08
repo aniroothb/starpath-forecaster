@@ -338,6 +338,14 @@ const HoroscopeForm = () => {
               </SelectContent>
             </Select>
           </div>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="text-sm text-muted-foreground">
+              ละติจูด: {formData.location.latitude}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              ลองจิจูด: {formData.location.longitude}
+            </div>
+          </div>
         </div>
 
         <div className="pt-4">

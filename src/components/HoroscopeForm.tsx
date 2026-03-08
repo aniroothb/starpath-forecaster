@@ -219,6 +219,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
             สถานที่เกิด
           </Label>
           <LocationSelector
+            key={selectedCountry}
             country={selectedCountry}
             onLocationChange={(location) =>
               setFormData({

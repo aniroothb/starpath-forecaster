@@ -1,8 +1,11 @@
 import type { CountryCode } from "./countries";
 import { provinces, provinceCoordinates } from "./thaiProvinces";
 import { japanPrefectures } from "./japanPrefectures";
+import { japanCities } from "./japanCities";
 import { koreaProvinces } from "./koreaProvinces";
+import { koreaDistricts } from "./koreaDistricts";
 import { chinaProvinces } from "./chinaProvinces";
+import { chinaCities } from "./chinaCities";
 
 export interface LocationEntry {
   id: string;
@@ -16,48 +19,43 @@ export interface LocationEntry {
 }
 
 export const allLocations: LocationEntry[] = [
-  // Thailand
+  // Thailand provinces
   ...provinces.map((p) => ({
-    id: `TH-${p.id}`,
-    name_en: p.name_en,
-    name_local: p.name_th,
-    country: "TH" as CountryCode,
-    countryFlag: "🇹🇭",
-    lat: provinceCoordinates[p.id]?.lat || "",
-    lng: provinceCoordinates[p.id]?.lng || "",
-    utc: "+07:00",
+    id: `TH-P-${p.id}`, name_en: p.name_en, name_local: p.name_th,
+    country: "TH" as CountryCode, countryFlag: "🇹🇭",
+    lat: provinceCoordinates[p.id]?.lat || "", lng: provinceCoordinates[p.id]?.lng || "", utc: "+07:00",
   })),
-  // Japan
+  // Japan prefectures + cities
   ...japanPrefectures.map((p) => ({
-    id: `JP-${p.id}`,
-    name_en: p.name_en,
-    name_local: p.name_ja,
-    country: "JP" as CountryCode,
-    countryFlag: "🇯🇵",
-    lat: p.lat,
-    lng: p.lng,
-    utc: "+09:00",
+    id: `JP-P-${p.id}`, name_en: p.name_en, name_local: p.name_ja,
+    country: "JP" as CountryCode, countryFlag: "🇯🇵",
+    lat: p.lat, lng: p.lng, utc: "+09:00",
   })),
-  // Korea
+  ...japanCities.map((c) => ({
+    id: `JP-C-${c.id}`, name_en: c.name_en, name_local: c.name_ja,
+    country: "JP" as CountryCode, countryFlag: "🇯🇵",
+    lat: c.lat, lng: c.lng, utc: "+09:00",
+  })),
+  // Korea provinces + districts
   ...koreaProvinces.map((p) => ({
-    id: `KR-${p.id}`,
-    name_en: p.name_en,
-    name_local: p.name_ko,
-    country: "KR" as CountryCode,
-    countryFlag: "🇰🇷",
-    lat: p.lat,
-    lng: p.lng,
-    utc: "+09:00",
+    id: `KR-P-${p.id}`, name_en: p.name_en, name_local: p.name_ko,
+    country: "KR" as CountryCode, countryFlag: "🇰🇷",
+    lat: p.lat, lng: p.lng, utc: "+09:00",
   })),
-  // China
+  ...koreaDistricts.map((d) => ({
+    id: `KR-D-${d.id}`, name_en: d.name_en, name_local: d.name_ko,
+    country: "KR" as CountryCode, countryFlag: "🇰🇷",
+    lat: d.lat, lng: d.lng, utc: "+09:00",
+  })),
+  // China provinces + cities
   ...chinaProvinces.map((p) => ({
-    id: `CN-${p.id}`,
-    name_en: p.name_en,
-    name_local: p.name_zh,
-    country: "CN" as CountryCode,
-    countryFlag: "🇨🇳",
-    lat: p.lat,
-    lng: p.lng,
-    utc: "+08:00",
+    id: `CN-P-${p.id}`, name_en: p.name_en, name_local: p.name_zh,
+    country: "CN" as CountryCode, countryFlag: "🇨🇳",
+    lat: p.lat, lng: p.lng, utc: "+08:00",
+  })),
+  ...chinaCities.map((c) => ({
+    id: `CN-C-${c.id}`, name_en: c.name_en, name_local: c.name_zh,
+    country: "CN" as CountryCode, countryFlag: "🇨🇳",
+    lat: c.lat, lng: c.lng, utc: "+08:00",
   })),
 ];

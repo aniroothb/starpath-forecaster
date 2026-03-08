@@ -252,43 +252,88 @@ const HoroscopeForm = () => {
             <MapPin className="w-4 h-4" />
             สถานที่เกิด
           </Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             <Select
-              value={formData.location.city}
+              value={String(selectedProvinceId)}
               onValueChange={(value) => {
-                const province = thaiProvinces.find((p) => p.name === value);
-                if (province) {
-                  setFormData({
-                    ...formData,
-                    location: {
-                      ...formData.location,
-                      city: value,
-                      latitude: province.latitude,
-                      longitude: province.longitude,
-                    },
-                  });
-                }
+                const pid = Number(value);
+                const prov = provinces.find((p) => p.id === pid);
+                setSelectedProvinceId(pid);
+                setSelectedDistrictId(null);
+                setFormData({
+                  ...formData,
+                  location: {
+                    ...formData.location,
+                    city: prov?.name_th || "",
+                    district: "",
+                  },
+                });
               }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="จังหวัด" />
               </SelectTrigger>
               <SelectContent>
-                {thaiProvinces.map((province) => (
-                  <SelectItem key={province.name} value={province.name}>
-                    {province.name}
+                {provinces.map((p) => (
+                  <SelectItem key={p.id} value={String(p.id)}>
+                    {p.name_th}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            <div className="text-sm text-muted-foreground">
-              ละติจูด: {formData.location.latitude}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              ลองจิจูด: {formData.location.longitude}
-            </div>
+
+            <Select
+              value={selectedDistrictId ? String(selectedDistrictId) : ""}
+              onValueChange={(value) => {
+                const did = Number(value);
+                const dist = filteredDistricts.find((d) => d.id === did);
+                setSelectedDistrictId(did);
+                setFormData({
+                  ...formData,
+                  location: {
+                    ...formData.location,
+                    district: dist?.name_th || "",
+                  },
+                });
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="อำเภอ/เขต" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredDistricts.map((d) => (
+                  <SelectItem key={d.id} value={String(d.id)}>
+                    {d.name_th}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              onValueChange={(value) => {
+                const sd = filteredSubDistricts.find((s) => s.id === Number(value));
+                if (sd) {
+                  setFormData({
+                    ...formData,
+                    location: {
+                      ...formData.location,
+                      district: `${formData.location.district} ต.${sd.name_th}`,
+                    },
+                  });
+                }
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="ตำบล/แขวง" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredSubDistricts.map((s) => (
+                  <SelectItem key={s.id} value={String(s.id)}>
+                    {s.name_th}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

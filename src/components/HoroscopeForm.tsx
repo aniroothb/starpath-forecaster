@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
 import { generateHoroscopePrediction } from "@/utils/huggingfaceApi";
-import { provinces, getDistrictsByProvince, getSubDistrictsByDistrict } from "@/data/thaiProvinces";
+import { provinces, getDistrictsByProvince, getSubDistrictsByDistrict, provinceCoordinates } from "@/data/thaiProvinces";
 import {
   Select,
   SelectContent,

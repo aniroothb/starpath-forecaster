@@ -1,12 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
-import { generateHoroscopePrediction } from "@/utils/huggingfaceApi";
-import { provinces, getDistrictsByProvince, getSubDistrictsByDistrict, provinceCoordinates } from "@/data/thaiProvinces";
+import type { CountryCode } from "@/data/countries";
+import LocationSelector from "@/components/LocationSelector";
 import {
   Select,
   SelectContent,
@@ -15,7 +15,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const HoroscopeForm = () => {
+interface HoroscopeFormProps {
+  selectedCountry: CountryCode;
+}
+
+const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     birthDate: {

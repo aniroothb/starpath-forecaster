@@ -11,7 +11,7 @@ const Index = () => {
       <Navbar selectedCountry={selectedCountry} onCountryChange={setSelectedCountry} />
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-4xl animate-float">
-          <HoroscopeForm selectedCountry={selectedCountry} />
+          <HoroscopeForm selectedCountry={selectedCountry} onCountryChange={setSelectedCountry} />
         </div>
       </div>
     </div>

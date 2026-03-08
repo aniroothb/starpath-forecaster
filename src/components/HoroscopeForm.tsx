@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { MapPin, Calendar, Clock } from "lucide-react";
+import { MapPin, Calendar, Clock, Search } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
 import type { CountryCode } from "@/data/countries";
 import LocationSelector from "@/components/LocationSelector";
+import LocationSearch from "@/components/LocationSearch";
 import {
   Select,
   SelectContent,
@@ -17,9 +18,10 @@ import {
 
 interface HoroscopeFormProps {
   selectedCountry: CountryCode;
+  onCountryChange: (country: CountryCode) => void;
 }
 
-const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
+const HoroscopeForm = ({ selectedCountry, onCountryChange }: HoroscopeFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     birthDate: {
@@ -212,10 +214,30 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           <Label className="flex items-center gap-2">
+            <Search className="w-4 h-4" />
+            Search Birthplace
+          </Label>
+          <LocationSearch
+            onSelect={(loc) => {
+              setFormData({
+                ...formData,
+                location: {
+                  city: loc.name_en,
+                  district: "",
+                  latitude: loc.lat,
+                  longitude: loc.lng,
+                  utc: loc.utc,
+                },
+              });
+            }}
+            onCountryChange={onCountryChange}
+          />
+
+          <Label className="flex items-center gap-2 mt-3">
             <MapPin className="w-4 h-4" />
-            Birthplace
+            Or select from list
           </Label>
           <LocationSelector
             key={selectedCountry}

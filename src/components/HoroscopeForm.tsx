@@ -94,20 +94,6 @@ const HoroscopeForm = () => {
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="apiKey">Hugging Face API Key (ถ้าต้องการคำทำนายจาก AI)</Label>
-          <Input
-            id="apiKey"
-            type="password"
-            placeholder="ใส่ API Key เพื่อใช้งาน AI"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            className="celestial-input"
-          />
-          <p className="text-sm text-muted-foreground">
-            หากไม่ได้ใส่ API Key ระบบจะใช้การคำนวณแบบพื้นฐาน
-          </p>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">

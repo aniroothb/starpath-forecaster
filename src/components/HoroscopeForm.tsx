@@ -37,6 +37,18 @@ const HoroscopeForm = () => {
   const [apiKey, setApiKey] = useState("");
   const [result, setResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);
+  const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(null);
+
+  const filteredDistricts = useMemo(
+    () => getDistrictsByProvince(selectedProvinceId),
+    [selectedProvinceId]
+  );
+
+  const filteredSubDistricts = useMemo(
+    () => (selectedDistrictId ? getSubDistrictsByDistrict(selectedDistrictId) : []),
+    [selectedDistrictId]
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -34,7 +34,6 @@ const HoroscopeForm = () => {
     }
   });
 
-  const [apiKey, setApiKey] = useState("");
   const [result, setResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);
@@ -56,18 +55,7 @@ const HoroscopeForm = () => {
     
     try {
       const horoscope = calculateHoroscope(formData);
-      
-      if (apiKey) {
-        const aiPrediction = await generateHoroscopePrediction(
-          apiKey,
-          horoscope.zodiacSign,
-          horoscope.lunarMansion,
-          horoscope.dailyPlanet
-        );
-        setResult(aiPrediction);
-      } else {
-        setResult(horoscope.interpretation);
-      }
+      setResult(horoscope.interpretation);
     } catch (error) {
       console.error('Error:', error);
       setResult("เกิดข้อผิดพลาดในการทำนาย กรุณาลองใหม่อีกครั้ง");
@@ -95,20 +83,6 @@ const HoroscopeForm = () => {
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="apiKey">Hugging Face API Key (ถ้าต้องการคำทำนายจาก AI)</Label>
-          <Input
-            id="apiKey"
-            type="password"
-            placeholder="ใส่ API Key เพื่อใช้งาน AI"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            className="celestial-input"
-          />
-          <p className="text-sm text-muted-foreground">
-            หากไม่ได้ใส่ API Key ระบบจะใช้การคำนวณแบบพื้นฐาน
-          </p>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">

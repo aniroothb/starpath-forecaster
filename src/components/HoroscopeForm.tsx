@@ -35,7 +35,6 @@ const HoroscopeForm = () => {
   });
 
   const [result, setResult] = useState<string>("");
-  const [result, setResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);
   const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(null);

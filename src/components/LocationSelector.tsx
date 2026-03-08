@@ -21,22 +21,19 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
   const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);
   const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(null);
 
-  const countryData = countries.find((c) => c.code === country);
-
-  // Reset selections when country changes
   useEffect(() => {
-    setSelectedProvinceId(country === "TH" ? 1 : 1);
+    setSelectedProvinceId(1);
     setSelectedDistrictId(null);
 
     if (country === "TH") {
       const coords = provinceCoordinates[1];
-      onLocationChange({ city: "กรุงเทพมหานคร", district: "", latitude: coords?.lat || "", longitude: coords?.lng || "", utc: "+07:00" });
+      onLocationChange({ city: "Bangkok", district: "", latitude: coords?.lat || "", longitude: coords?.lng || "", utc: "+07:00" });
     } else if (country === "JP") {
       const pref = japanPrefectures[0];
-      onLocationChange({ city: pref.name_th, district: "", latitude: pref.lat, longitude: pref.lng, utc: "+09:00" });
+      onLocationChange({ city: pref.name_en, district: "", latitude: pref.lat, longitude: pref.lng, utc: "+09:00" });
     } else if (country === "KR") {
       const prov = koreaProvinces[0];
-      onLocationChange({ city: prov.name_th, district: "", latitude: prov.lat, longitude: prov.lng, utc: "+09:00" });
+      onLocationChange({ city: prov.name_en, district: "", latitude: prov.lat, longitude: prov.lng, utc: "+09:00" });
     }
   }, [country]);
 
@@ -60,17 +57,17 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
             const pref = japanPrefectures.find((p) => p.id === id);
             setSelectedProvinceId(id);
             if (pref) {
-              onLocationChange({ city: pref.name_th, district: pref.name_ja, latitude: pref.lat, longitude: pref.lng, utc: "+09:00" });
+              onLocationChange({ city: pref.name_en, district: pref.name_ja, latitude: pref.lat, longitude: pref.lng, utc: "+09:00" });
             }
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="จังหวัด (都道府県)" />
+            <SelectValue placeholder="Prefecture" />
           </SelectTrigger>
           <SelectContent>
             {japanPrefectures.map((p) => (
               <SelectItem key={p.id} value={String(p.id)}>
-                {p.name_ja} ({p.name_th})
+                {p.name_en} ({p.name_ja})
               </SelectItem>
             ))}
           </SelectContent>
@@ -89,17 +86,17 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
             const prov = koreaProvinces.find((p) => p.id === id);
             setSelectedProvinceId(id);
             if (prov) {
-              onLocationChange({ city: prov.name_th, district: prov.name_ko, latitude: prov.lat, longitude: prov.lng, utc: "+09:00" });
+              onLocationChange({ city: prov.name_en, district: prov.name_ko, latitude: prov.lat, longitude: prov.lng, utc: "+09:00" });
             }
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="จังหวัด (도/시)" />
+            <SelectValue placeholder="Province / City" />
           </SelectTrigger>
           <SelectContent>
             {koreaProvinces.map((p) => (
               <SelectItem key={p.id} value={String(p.id)}>
-                {p.name_ko} ({p.name_th})
+                {p.name_en} ({p.name_ko})
               </SelectItem>
             ))}
           </SelectContent>
@@ -108,7 +105,7 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     );
   }
 
-  // Thailand (default)
+  // Thailand
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
       <Select
@@ -120,7 +117,7 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
           setSelectedProvinceId(pid);
           setSelectedDistrictId(null);
           onLocationChange({
-            city: prov?.name_th || "",
+            city: prov?.name_en || "",
             district: "",
             latitude: coords?.lat || "",
             longitude: coords?.lng || "",
@@ -129,12 +126,12 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
         }}
       >
         <SelectTrigger>
-          <SelectValue placeholder="จังหวัด" />
+          <SelectValue placeholder="Province" />
         </SelectTrigger>
         <SelectContent>
           {provinces.map((p) => (
             <SelectItem key={p.id} value={String(p.id)}>
-              {p.name_th}
+              {p.name_en}
             </SelectItem>
           ))}
         </SelectContent>
@@ -147,8 +144,8 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
           const dist = filteredDistricts.find((d) => d.id === did);
           setSelectedDistrictId(did);
           onLocationChange({
-            city: provinces.find((p) => p.id === selectedProvinceId)?.name_th || "",
-            district: dist?.name_th || "",
+            city: provinces.find((p) => p.id === selectedProvinceId)?.name_en || "",
+            district: dist?.name_en || "",
             latitude: provinceCoordinates[selectedProvinceId]?.lat || "",
             longitude: provinceCoordinates[selectedProvinceId]?.lng || "",
             utc: "+07:00",
@@ -156,12 +153,12 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
         }}
       >
         <SelectTrigger>
-          <SelectValue placeholder="อำเภอ/เขต" />
+          <SelectValue placeholder="District" />
         </SelectTrigger>
         <SelectContent>
           {filteredDistricts.map((d) => (
             <SelectItem key={d.id} value={String(d.id)}>
-              {d.name_th}
+              {d.name_en}
             </SelectItem>
           ))}
         </SelectContent>
@@ -173,8 +170,8 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
           if (sd) {
             const currentDistrict = filteredDistricts.find((d) => d.id === selectedDistrictId);
             onLocationChange({
-              city: provinces.find((p) => p.id === selectedProvinceId)?.name_th || "",
-              district: `${currentDistrict?.name_th || ""} ต.${sd.name_th}`,
+              city: provinces.find((p) => p.id === selectedProvinceId)?.name_en || "",
+              district: `${currentDistrict?.name_en || ""}, ${sd.name_en}`,
               latitude: provinceCoordinates[selectedProvinceId]?.lat || "",
               longitude: provinceCoordinates[selectedProvinceId]?.lng || "",
               utc: "+07:00",
@@ -183,12 +180,12 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
         }}
       >
         <SelectTrigger>
-          <SelectValue placeholder="ตำบล/แขวง" />
+          <SelectValue placeholder="Sub-district" />
         </SelectTrigger>
         <SelectContent>
           {filteredSubDistricts.map((s) => (
             <SelectItem key={s.id} value={String(s.id)}>
-              {s.name_th}
+              {s.name_en}
             </SelectItem>
           ))}
         </SelectContent>

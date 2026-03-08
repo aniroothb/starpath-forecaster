@@ -30,10 +30,10 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
       minute: "53"
     },
     location: {
-      city: "กรุงเทพมหานคร",
-      district: "เขตพระนคร",
-      latitude: "13.752555",
-      longitude: "100.494066",
+      city: "Bangkok",
+      district: "",
+      latitude: "13.7563",
+      longitude: "100.5018",
       utc: "+07:00"
     }
   });
@@ -50,7 +50,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
       setResult(horoscope.interpretation);
     } catch (error) {
       console.error('Error:', error);
-      setResult("เกิดข้อผิดพลาดในการทำนาย กรุณาลองใหม่อีกครั้ง");
+      setResult("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -59,28 +59,27 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
   return (
     <Card className="w-full max-w-2xl p-6 space-y-6 bg-white/80 backdrop-blur-sm">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-primary">ดูดวง โหราศาสตร์</h1>
-        <p className="text-muted-foreground">กรอกข้อมูลเพื่อคำนวณดวงชะตา</p>
+        <h1 className="text-3xl font-bold text-primary">Horoscope Reading</h1>
+        <p className="text-muted-foreground">Enter your details to calculate your horoscope</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="name">ชื่อ-สกุล</Label>
+          <Label htmlFor="name">Full Name</Label>
           <Input
             id="name"
-            placeholder="ไม่ระบุชื่อ"
+            placeholder="Enter your name (optional)"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="celestial-input"
           />
         </div>
 
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              วันเดือนปีเกิด
+              Date of Birth
             </Label>
             <div className="grid grid-cols-3 gap-2">
               <Select
@@ -93,7 +92,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="วัน" />
+                  <SelectValue placeholder="Day" />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
@@ -117,7 +116,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="เดือน" />
+                  <SelectValue placeholder="Month" />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
@@ -125,7 +124,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
                       key={month}
                       value={String(month).padStart(2, "0")}
                     >
-                      {new Date(2024, month - 1).toLocaleString("th-TH", {
+                      {new Date(2024, month - 1).toLocaleString("en-US", {
                         month: "long"
                       })}
                     </SelectItem>
@@ -143,12 +142,12 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="ปี" />
+                  <SelectValue placeholder="Year" />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 100 }, (_, i) => 2024 - i).map((year) => (
                     <SelectItem key={year} value={String(year)}>
-                      {year + 543}
+                      {year}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -159,7 +158,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              เวลา
+              Time of Birth
             </Label>
             <div className="grid grid-cols-2 gap-2">
               <Select
@@ -172,7 +171,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="ชั่วโมง" />
+                  <SelectValue placeholder="Hour" />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
@@ -196,7 +195,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="นาที" />
+                  <SelectValue placeholder="Min" />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
@@ -216,7 +215,7 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
         <div className="space-y-2">
           <Label className="flex items-center gap-2">
             <MapPin className="w-4 h-4" />
-            สถานที่เกิด
+            Birthplace
           </Label>
           <LocationSelector
             key={selectedCountry}
@@ -230,10 +229,10 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
           />
           <div className="grid grid-cols-2 gap-2 mt-2">
             <div className="text-sm text-muted-foreground">
-              ละติจูด: {formData.location.latitude}
+              Latitude: {formData.location.latitude}
             </div>
             <div className="text-sm text-muted-foreground">
-              ลองจิจูด: {formData.location.longitude}
+              Longitude: {formData.location.longitude}
             </div>
           </div>
         </div>
@@ -244,14 +243,14 @@ const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
             className="w-full celestial-button"
             disabled={isLoading}
           >
-            {isLoading ? "กำลังทำนาย..." : "ทำนาย"}
+            {isLoading ? "Reading..." : "Get Reading"}
           </Button>
         </div>
       </form>
 
       {result && (
         <div className="mt-6 p-4 bg-primary/5 rounded-lg">
-          <h2 className="text-xl font-semibold mb-2">ผลการทำนาย</h2>
+          <h2 className="text-xl font-semibold mb-2">Your Reading</h2>
           <p className="whitespace-pre-line">{result}</p>
         </div>
       )}

@@ -17,7 +17,7 @@ const Navbar = ({ selectedCountry, onCountryChange }: NavbarProps) => {
   return (
     <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-border sticky top-0 z-50">
       <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-primary">🔮 ดูดวง โหราศาสตร์</h1>
+        <h1 className="text-xl font-bold text-primary">🔮 Horoscope</h1>
         <Select
           value={selectedCountry}
           onValueChange={(value) => onCountryChange(value as CountryCode)}
@@ -28,7 +28,7 @@ const Navbar = ({ selectedCountry, onCountryChange }: NavbarProps) => {
           <SelectContent>
             {countries.map((c) => (
               <SelectItem key={c.code} value={c.code}>
-                {c.flag} {c.name_th}
+                {c.flag} {c.name_en}
               </SelectItem>
             ))}
           </SelectContent>

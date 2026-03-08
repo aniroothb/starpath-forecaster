@@ -34,7 +34,7 @@ const HoroscopeForm = () => {
     }
   });
 
-  const [apiKey, setApiKey] = useState("");
+  const [result, setResult] = useState<string>("");
   const [result, setResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);

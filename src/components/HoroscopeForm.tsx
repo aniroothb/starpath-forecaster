@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
 import { generateHoroscopePrediction } from "@/utils/huggingfaceApi";
+import { thaiProvinces } from "@/data/thaiProvinces";
 import {
   Select,
   SelectContent,
@@ -242,35 +243,30 @@ const HoroscopeForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <Select
               value={formData.location.city}
-              onValueChange={(value) =>
-                setFormData({
-                  ...formData,
-                  location: { ...formData.location, city: value }
-                })
-              }
+              onValueChange={(value) => {
+                const province = thaiProvinces.find((p) => p.name === value);
+                if (province) {
+                  setFormData({
+                    ...formData,
+                    location: {
+                      ...formData.location,
+                      city: value,
+                      latitude: province.latitude,
+                      longitude: province.longitude,
+                    },
+                  });
+                }
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="จังหวัด" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="กรุงเทพมหานคร">กรุงเทพมหานคร</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={formData.location.district}
-              onValueChange={(value) =>
-                setFormData({
-                  ...formData,
-                  location: { ...formData.location, district: value }
-                })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="เขต" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="เขตพระนคร">เขตพระนคร</SelectItem>
+                {thaiProvinces.map((province) => (
+                  <SelectItem key={province.name} value={province.name}>
+                    {province.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

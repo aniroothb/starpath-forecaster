@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
 import { generateHoroscopePrediction } from "@/utils/huggingfaceApi";
-import { thaiProvinces } from "@/data/thaiProvinces";
+import { provinces, getDistrictsByProvince, getSubDistrictsByDistrict } from "@/data/thaiProvinces";
 import {
   Select,
   SelectContent,

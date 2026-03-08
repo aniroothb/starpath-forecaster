@@ -258,6 +258,7 @@ const HoroscopeForm = () => {
               onValueChange={(value) => {
                 const pid = Number(value);
                 const prov = provinces.find((p) => p.id === pid);
+                const coords = provinceCoordinates[pid];
                 setSelectedProvinceId(pid);
                 setSelectedDistrictId(null);
                 setFormData({
@@ -266,6 +267,8 @@ const HoroscopeForm = () => {
                     ...formData.location,
                     city: prov?.name_th || "",
                     district: "",
+                    latitude: coords?.lat || "",
+                    longitude: coords?.lng || "",
                   },
                 });
               }}

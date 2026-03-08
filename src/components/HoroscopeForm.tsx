@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
 import { generateHoroscopePrediction } from "@/utils/huggingfaceApi";
-import { provinces, getDistrictsByProvince, getSubDistrictsByDistrict } from "@/data/thaiProvinces";
+import { provinces, getDistrictsByProvince, getSubDistrictsByDistrict, provinceCoordinates } from "@/data/thaiProvinces";
 import {
   Select,
   SelectContent,
@@ -258,6 +258,7 @@ const HoroscopeForm = () => {
               onValueChange={(value) => {
                 const pid = Number(value);
                 const prov = provinces.find((p) => p.id === pid);
+                const coords = provinceCoordinates[pid];
                 setSelectedProvinceId(pid);
                 setSelectedDistrictId(null);
                 setFormData({
@@ -266,6 +267,8 @@ const HoroscopeForm = () => {
                     ...formData.location,
                     city: prov?.name_th || "",
                     district: "",
+                    latitude: coords?.lat || "",
+                    longitude: coords?.lng || "",
                   },
                 });
               }}
@@ -334,6 +337,14 @@ const HoroscopeForm = () => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="text-sm text-muted-foreground">
+              ละติจูด: {formData.location.latitude}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              ลองจิจูด: {formData.location.longitude}
+            </div>
           </div>
         </div>
 

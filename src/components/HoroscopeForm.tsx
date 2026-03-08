@@ -1,12 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Clock } from "lucide-react";
 import { calculateHoroscope } from "@/utils/horoscopeCalculations";
-import { generateHoroscopePrediction } from "@/utils/huggingfaceApi";
-import { provinces, getDistrictsByProvince, getSubDistrictsByDistrict, provinceCoordinates } from "@/data/thaiProvinces";
+import type { CountryCode } from "@/data/countries";
+import LocationSelector from "@/components/LocationSelector";
 import {
   Select,
   SelectContent,
@@ -15,7 +15,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const HoroscopeForm = () => {
+interface HoroscopeFormProps {
+  selectedCountry: CountryCode;
+}
+
+const HoroscopeForm = ({ selectedCountry }: HoroscopeFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     birthDate: {
@@ -36,18 +40,6 @@ const HoroscopeForm = () => {
 
   const [result, setResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);
-  const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(null);
-
-  const filteredDistricts = useMemo(
-    () => getDistrictsByProvince(selectedProvinceId),
-    [selectedProvinceId]
-  );
-
-  const filteredSubDistricts = useMemo(
-    () => (selectedDistrictId ? getSubDistrictsByDistrict(selectedDistrictId) : []),
-    [selectedDistrictId]
-  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -226,92 +218,15 @@ const HoroscopeForm = () => {
             <MapPin className="w-4 h-4" />
             สถานที่เกิด
           </Label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <Select
-              value={String(selectedProvinceId)}
-              onValueChange={(value) => {
-                const pid = Number(value);
-                const prov = provinces.find((p) => p.id === pid);
-                const coords = provinceCoordinates[pid];
-                setSelectedProvinceId(pid);
-                setSelectedDistrictId(null);
-                setFormData({
-                  ...formData,
-                  location: {
-                    ...formData.location,
-                    city: prov?.name_th || "",
-                    district: "",
-                    latitude: coords?.lat || "",
-                    longitude: coords?.lng || "",
-                  },
-                });
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="จังหวัด" />
-              </SelectTrigger>
-              <SelectContent>
-                {provinces.map((p) => (
-                  <SelectItem key={p.id} value={String(p.id)}>
-                    {p.name_th}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={selectedDistrictId ? String(selectedDistrictId) : ""}
-              onValueChange={(value) => {
-                const did = Number(value);
-                const dist = filteredDistricts.find((d) => d.id === did);
-                setSelectedDistrictId(did);
-                setFormData({
-                  ...formData,
-                  location: {
-                    ...formData.location,
-                    district: dist?.name_th || "",
-                  },
-                });
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="อำเภอ/เขต" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredDistricts.map((d) => (
-                  <SelectItem key={d.id} value={String(d.id)}>
-                    {d.name_th}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              onValueChange={(value) => {
-                const sd = filteredSubDistricts.find((s) => s.id === Number(value));
-                if (sd) {
-                  setFormData({
-                    ...formData,
-                    location: {
-                      ...formData.location,
-                      district: `${formData.location.district} ต.${sd.name_th}`,
-                    },
-                  });
-                }
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="ตำบล/แขวง" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredSubDistricts.map((s) => (
-                  <SelectItem key={s.id} value={String(s.id)}>
-                    {s.name_th}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <LocationSelector
+            country={selectedCountry}
+            onLocationChange={(location) =>
+              setFormData({
+                ...formData,
+                location: { ...formData.location, ...location },
+              })
+            }
+          />
           <div className="grid grid-cols-2 gap-2 mt-2">
             <div className="text-sm text-muted-foreground">
               ละติจูด: {formData.location.latitude}

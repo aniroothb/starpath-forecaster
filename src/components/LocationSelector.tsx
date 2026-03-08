@@ -70,7 +70,7 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
           <SelectContent>
             {japanPrefectures.map((p) => (
               <SelectItem key={p.id} value={String(p.id)}>
-                {p.flag ?? ""}{p.name_ja} ({p.name_th})
+                {p.name_ja} ({p.name_th})
               </SelectItem>
             ))}
           </SelectContent>

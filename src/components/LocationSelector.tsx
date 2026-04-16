@@ -274,6 +274,33 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
             </SelectContent>
           </Select>
         )}
+
+        {/* Vietnam: District */}
+        {country === "VN" && vietnamDistrictList.length > 0 && (
+          <Select
+            onValueChange={(value) => {
+              const dist = vietnamDistrictList.find((d) => d.id === Number(value));
+              if (dist) {
+                const prov = provinceList.find((p) => p.id === selectedProvinceId);
+                onLocationChange({
+                  city: prov?.name_en || "", district: `${dist.name_en} (${dist.name_vi})`,
+                  latitude: dist.lat, longitude: dist.lng, utc: "+07:00",
+                });
+              }
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="District (Quận/Huyện)" />
+            </SelectTrigger>
+            <SelectContent>
+              {vietnamDistrictList.map((d) => (
+                <SelectItem key={d.id} value={String(d.id)}>
+                  {d.name_en} ({d.name_vi})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
     </div>
   );

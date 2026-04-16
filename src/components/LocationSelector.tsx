@@ -7,6 +7,8 @@ import { koreaProvinces } from "@/data/koreaProvinces";
 import { getKoreaDistrictsByProvince } from "@/data/koreaDistricts";
 import { chinaProvinces } from "@/data/chinaProvinces";
 import { getChinaCitiesByProvince } from "@/data/chinaCities";
+import { vietnamProvinces } from "@/data/vietnamProvinces";
+import { getVietnamDistrictsByProvince } from "@/data/vietnamDistricts";
 import {
   Select,
   SelectContent,
@@ -41,6 +43,11 @@ const getProvinceList = (country: CountryCode) => {
       return chinaProvinces.map((p) => ({
         id: p.id, name_en: p.name_en, name_local: p.name_zh,
         lat: p.lat, lng: p.lng, utc: "+08:00",
+      }));
+    case "VN":
+      return vietnamProvinces.map((p) => ({
+        id: p.id, name_en: p.name_en, name_local: p.name_vi,
+        lat: p.lat, lng: p.lng, utc: "+07:00",
       }));
     default:
       return [];
@@ -80,6 +87,12 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     [selectedProvinceId, country]
   );
 
+  // Vietnam districts
+  const vietnamDistrictList = useMemo(
+    () => (country === "VN" ? getVietnamDistrictsByProvince(selectedProvinceId) : []),
+    [selectedProvinceId, country]
+  );
+
   useEffect(() => {
     const first = provinceList[0];
     if (first) {
@@ -105,8 +118,8 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     }
   };
 
-  const provinceLabel = country === "JP" ? "Prefecture" : "Province";
-  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : "District";
+  const provinceLabel = country === "JP" ? "Prefecture" : country === "VN" ? "Province (Tỉnh/TP)" : "Province";
+  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : country === "VN" ? "District (Quận/Huyện)" : "District";
 
   return (
     <div className="space-y-2">

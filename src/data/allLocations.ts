@@ -8,6 +8,8 @@ import { chinaProvinces } from "./chinaProvinces";
 import { chinaCities } from "./chinaCities";
 import { vietnamProvinces } from "./vietnamProvinces";
 import { vietnamDistricts } from "./vietnamDistricts";
+import { laosProvinces } from "./laosProvinces";
+import { laosDistricts } from "./laosDistricts";
 
 export interface LocationEntry {
   id: string;
@@ -69,6 +71,17 @@ export const allLocations: LocationEntry[] = [
   ...vietnamDistricts.map((d) => ({
     id: `VN-D-${d.id}`, name_en: d.name_en, name_local: d.name_vi,
     country: "VN" as CountryCode, countryFlag: "🇻🇳",
+    lat: d.lat, lng: d.lng, utc: "+07:00",
+  })),
+  // Laos provinces + districts
+  ...laosProvinces.map((p) => ({
+    id: `LA-P-${p.id}`, name_en: p.name_en, name_local: p.name_lo,
+    country: "LA" as CountryCode, countryFlag: "🇱🇦",
+    lat: p.lat, lng: p.lng, utc: "+07:00",
+  })),
+  ...laosDistricts.map((d) => ({
+    id: `LA-D-${d.id}`, name_en: d.name_en, name_local: d.name_lo,
+    country: "LA" as CountryCode, countryFlag: "🇱🇦",
     lat: d.lat, lng: d.lng, utc: "+07:00",
   })),
 ];

@@ -11,6 +11,8 @@ import { vietnamProvinces } from "@/data/vietnamProvinces";
 import { getVietnamDistrictsByProvince } from "@/data/vietnamDistricts";
 import { laosProvinces } from "@/data/laosProvinces";
 import { getLaosDistrictsByProvince } from "@/data/laosDistricts";
+import { singaporeRegions } from "@/data/singaporeRegions";
+import { getSingaporeAreasByRegion } from "@/data/singaporeAreas";
 import {
   Select,
   SelectContent,
@@ -55,6 +57,11 @@ const getProvinceList = (country: CountryCode) => {
       return laosProvinces.map((p) => ({
         id: p.id, name_en: p.name_en, name_local: p.name_lo,
         lat: p.lat, lng: p.lng, utc: "+07:00",
+      }));
+    case "SG":
+      return singaporeRegions.map((r) => ({
+        id: r.id, name_en: r.name_en, name_local: r.name_local,
+        lat: r.lat, lng: r.lng, utc: "+08:00",
       }));
     default:
       return [];
@@ -106,6 +113,12 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     [selectedProvinceId, country]
   );
 
+  // Singapore areas
+  const singaporeAreaList = useMemo(
+    () => (country === "SG" ? getSingaporeAreasByRegion(selectedProvinceId) : []),
+    [selectedProvinceId, country]
+  );
+
   useEffect(() => {
     const first = provinceList[0];
     if (first) {
@@ -131,8 +144,8 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     }
   };
 
-  const provinceLabel = country === "JP" ? "Prefecture" : country === "VN" ? "Province (Tỉnh/TP)" : country === "LA" ? "Province (ແຂວງ)" : "Province";
-  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : country === "VN" ? "District (Quận/Huyện)" : country === "LA" ? "District (ເມືອງ)" : "District";
+  const provinceLabel = country === "JP" ? "Prefecture" : country === "VN" ? "Province (Tỉnh/TP)" : country === "LA" ? "Province (ແຂວງ)" : country === "SG" ? "Region" : "Province";
+  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : country === "VN" ? "District (Quận/Huyện)" : country === "LA" ? "District (ເມືອງ)" : country === "SG" ? "Planning Area" : "District";
 
   return (
     <div className="space-y-2">
@@ -336,6 +349,33 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
               {laosDistrictList.map((d) => (
                 <SelectItem key={d.id} value={String(d.id)}>
                   {d.name_en} ({d.name_lo})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {/* Singapore: Planning Area */}
+        {country === "SG" && singaporeAreaList.length > 0 && (
+          <Select
+            onValueChange={(value) => {
+              const area = singaporeAreaList.find((a) => a.id === Number(value));
+              if (area) {
+                const region = provinceList.find((p) => p.id === selectedProvinceId);
+                onLocationChange({
+                  city: region?.name_en || "", district: `${area.name_en} (${area.name_local})`,
+                  latitude: area.lat, longitude: area.lng, utc: "+08:00",
+                });
+              }
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Planning Area" />
+            </SelectTrigger>
+            <SelectContent>
+              {singaporeAreaList.map((a) => (
+                <SelectItem key={a.id} value={String(a.id)}>
+                  {a.name_en} ({a.name_local})
                 </SelectItem>
               ))}
             </SelectContent>

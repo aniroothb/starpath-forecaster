@@ -1,4 +1,4 @@
-export type CountryCode = "TH" | "JP" | "KR" | "CN" | "VN" | "LA";
+export type CountryCode = "TH" | "JP" | "KR" | "CN" | "VN" | "LA" | "SG";
 
 export interface Country {
   code: CountryCode;
@@ -14,4 +14,5 @@ export const countries: Country[] = [
   { code: "CN", name_en: "China", flag: "🇨🇳", utc: "+08:00" },
   { code: "VN", name_en: "Vietnam", flag: "🇻🇳", utc: "+07:00" },
   { code: "LA", name_en: "Laos", flag: "🇱🇦", utc: "+07:00" },
+  { code: "SG", name_en: "Singapore", flag: "🇸🇬", utc: "+08:00" },
 ];

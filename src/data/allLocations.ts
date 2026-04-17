@@ -10,6 +10,8 @@ import { vietnamProvinces } from "./vietnamProvinces";
 import { vietnamDistricts } from "./vietnamDistricts";
 import { laosProvinces } from "./laosProvinces";
 import { laosDistricts } from "./laosDistricts";
+import { singaporeRegions } from "./singaporeRegions";
+import { singaporeAreas } from "./singaporeAreas";
 
 export interface LocationEntry {
   id: string;
@@ -83,5 +85,16 @@ export const allLocations: LocationEntry[] = [
     id: `LA-D-${d.id}`, name_en: d.name_en, name_local: d.name_lo,
     country: "LA" as CountryCode, countryFlag: "🇱🇦",
     lat: d.lat, lng: d.lng, utc: "+07:00",
+  })),
+  // Singapore regions + areas
+  ...singaporeRegions.map((r) => ({
+    id: `SG-R-${r.id}`, name_en: r.name_en, name_local: r.name_local,
+    country: "SG" as CountryCode, countryFlag: "🇸🇬",
+    lat: r.lat, lng: r.lng, utc: "+08:00",
+  })),
+  ...singaporeAreas.map((a) => ({
+    id: `SG-A-${a.id}`, name_en: a.name_en, name_local: a.name_local,
+    country: "SG" as CountryCode, countryFlag: "🇸🇬",
+    lat: a.lat, lng: a.lng, utc: "+08:00",
   })),
 ];

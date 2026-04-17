@@ -1,4 +1,4 @@
-export type CountryCode = "TH" | "JP" | "KR" | "CN" | "VN" | "LA" | "SG";
+export type CountryCode = "TH" | "JP" | "KR" | "CN" | "VN" | "LA" | "SG" | "ID";
 
 export interface Country {
   code: CountryCode;

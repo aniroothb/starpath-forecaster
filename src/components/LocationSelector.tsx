@@ -394,6 +394,34 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
             </SelectContent>
           </Select>
         )}
+
+        {/* Indonesia: City / Regency */}
+        {country === "ID" && indonesiaCityList.length > 0 && (
+          <Select
+            onValueChange={(value) => {
+              const city = indonesiaCityList.find((c) => c.id === Number(value));
+              if (city) {
+                const prov = provinceList.find((p) => p.id === selectedProvinceId);
+                onLocationChange({
+                  city: prov?.name_en || "", district: `${city.name_en} (${city.name_id})`,
+                  latitude: city.lat, longitude: city.lng,
+                  utc: indonesiaProvinceUtc[city.provinceId] || "+07:00",
+                });
+              }
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="City / Regency (Kota/Kabupaten)" />
+            </SelectTrigger>
+            <SelectContent>
+              {indonesiaCityList.map((c) => (
+                <SelectItem key={c.id} value={String(c.id)}>
+                  {c.name_en} ({c.name_id})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
     </div>
   );

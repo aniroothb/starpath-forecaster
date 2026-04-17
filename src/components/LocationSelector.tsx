@@ -13,6 +13,8 @@ import { laosProvinces } from "@/data/laosProvinces";
 import { getLaosDistrictsByProvince } from "@/data/laosDistricts";
 import { singaporeRegions } from "@/data/singaporeRegions";
 import { getSingaporeAreasByRegion } from "@/data/singaporeAreas";
+import { indonesiaProvinces, indonesiaProvinceUtc } from "@/data/indonesiaProvinces";
+import { getIndonesiaCitiesByProvince } from "@/data/indonesiaCities";
 import {
   Select,
   SelectContent,
@@ -62,6 +64,11 @@ const getProvinceList = (country: CountryCode) => {
       return singaporeRegions.map((r) => ({
         id: r.id, name_en: r.name_en, name_local: r.name_local,
         lat: r.lat, lng: r.lng, utc: "+08:00",
+      }));
+    case "ID":
+      return indonesiaProvinces.map((p) => ({
+        id: p.id, name_en: p.name_en, name_local: p.name_id,
+        lat: p.lat, lng: p.lng, utc: indonesiaProvinceUtc[p.id] || "+07:00",
       }));
     default:
       return [];
@@ -119,6 +126,12 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     [selectedProvinceId, country]
   );
 
+  // Indonesia cities
+  const indonesiaCityList = useMemo(
+    () => (country === "ID" ? getIndonesiaCitiesByProvince(selectedProvinceId) : []),
+    [selectedProvinceId, country]
+  );
+
   useEffect(() => {
     const first = provinceList[0];
     if (first) {
@@ -144,8 +157,8 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     }
   };
 
-  const provinceLabel = country === "JP" ? "Prefecture" : country === "VN" ? "Province (Tỉnh/TP)" : country === "LA" ? "Province (ແຂວງ)" : country === "SG" ? "Region" : "Province";
-  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : country === "VN" ? "District (Quận/Huyện)" : country === "LA" ? "District (ເມືອງ)" : country === "SG" ? "Planning Area" : "District";
+  const provinceLabel = country === "JP" ? "Prefecture" : country === "VN" ? "Province (Tỉnh/TP)" : country === "LA" ? "Province (ແຂວງ)" : country === "SG" ? "Region" : country === "ID" ? "Province (Provinsi)" : "Province";
+  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : country === "VN" ? "District (Quận/Huyện)" : country === "LA" ? "District (ເມືອງ)" : country === "SG" ? "Planning Area" : country === "ID" ? "City / Regency (Kota/Kabupaten)" : "District";
 
   return (
     <div className="space-y-2">
@@ -376,6 +389,34 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
               {singaporeAreaList.map((a) => (
                 <SelectItem key={a.id} value={String(a.id)}>
                   {a.name_en} ({a.name_local})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {/* Indonesia: City / Regency */}
+        {country === "ID" && indonesiaCityList.length > 0 && (
+          <Select
+            onValueChange={(value) => {
+              const city = indonesiaCityList.find((c) => c.id === Number(value));
+              if (city) {
+                const prov = provinceList.find((p) => p.id === selectedProvinceId);
+                onLocationChange({
+                  city: prov?.name_en || "", district: `${city.name_en} (${city.name_id})`,
+                  latitude: city.lat, longitude: city.lng,
+                  utc: indonesiaProvinceUtc[city.provinceId] || "+07:00",
+                });
+              }
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="City / Regency (Kota/Kabupaten)" />
+            </SelectTrigger>
+            <SelectContent>
+              {indonesiaCityList.map((c) => (
+                <SelectItem key={c.id} value={String(c.id)}>
+                  {c.name_en} ({c.name_id})
                 </SelectItem>
               ))}
             </SelectContent>

@@ -126,6 +126,12 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     [selectedProvinceId, country]
   );
 
+  // Indonesia cities
+  const indonesiaCityList = useMemo(
+    () => (country === "ID" ? getIndonesiaCitiesByProvince(selectedProvinceId) : []),
+    [selectedProvinceId, country]
+  );
+
   useEffect(() => {
     const first = provinceList[0];
     if (first) {
@@ -151,8 +157,8 @@ const LocationSelector = ({ country, onLocationChange }: LocationSelectorProps) 
     }
   };
 
-  const provinceLabel = country === "JP" ? "Prefecture" : country === "VN" ? "Province (Tỉnh/TP)" : country === "LA" ? "Province (ແຂວງ)" : country === "SG" ? "Region" : "Province";
-  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : country === "VN" ? "District (Quận/Huyện)" : country === "LA" ? "District (ເມືອງ)" : country === "SG" ? "Planning Area" : "District";
+  const provinceLabel = country === "JP" ? "Prefecture" : country === "VN" ? "Province (Tỉnh/TP)" : country === "LA" ? "Province (ແຂວງ)" : country === "SG" ? "Region" : country === "ID" ? "Province (Provinsi)" : "Province";
+  const districtLabel = country === "JP" ? "City / Ward" : country === "KR" ? "District (구/시/군)" : country === "CN" ? "City / District" : country === "VN" ? "District (Quận/Huyện)" : country === "LA" ? "District (ເມືອງ)" : country === "SG" ? "Planning Area" : country === "ID" ? "City / Regency (Kota/Kabupaten)" : "District";
 
   return (
     <div className="space-y-2">
